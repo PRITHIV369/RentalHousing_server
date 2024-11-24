@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cors());
-const uri =  'mongodb+srv://theprithivraj:h1h2h3h4@prithiv.xaz8u.mongodb.net/';
+const uri = 'mongodb+srv://theprithivraj:h1h2h3h4@prithiv.xaz8u.mongodb.net/';
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected"))
@@ -14,8 +14,13 @@ const houseSchema = new mongoose.Schema({
   location: String,
   price: String,
   image: String,
+  properType:String,
+  furnishingStatus:String,
+  phoneNumber: String, 
+  email: String,       
+  youtubeVideoLink: String, 
+  instagram: String    
 });
-
 const House = mongoose.model("House", houseSchema);
 app.get("/houses", async (req, res) => {
   try {
@@ -32,6 +37,21 @@ app.post("/houses", async (req, res) => {
     res.status(201).json(house);
   } catch (err) {
     res.status(500).json({ error: "Failed to add house" });
+  }
+});
+app.get("/filter", async (req, res) => {
+  try {
+    const { location, price, propertyType, furnishingStatus } = req.query;
+    const query = {};
+    if (location) query.location = location;
+    if (price) query.price = price;
+    if (propertyType) query.propertyType = propertyType;
+    if (furnishingStatus) query.furnishingStatus = furnishingStatus;
+
+    const houses = await House.find(query);
+    res.json(houses);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch filtered houses" });
   }
 });
 
