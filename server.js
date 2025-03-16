@@ -14,7 +14,7 @@ const houseSchema = new mongoose.Schema({
   location: String,
   price: String,
   image: String,
-  properType:String,
+  propertyType:String,
   furnishingStatus:String,
   phoneNumber: String, 
   email: String,       
